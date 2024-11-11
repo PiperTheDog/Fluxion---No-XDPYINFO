@@ -43,20 +43,6 @@ if [ $EUID -ne 0 ]; then # Super User Check
   echo -e "\\033[31mAborted, please execute the script as root.\\033[0m"; exit 1
 fi
 
-# ===================== < XTerm Checks > ===================== #
-# TODO: Run the checks below only if we're not using tmux.
-if [ ! "${DISPLAY:-}" ]; then # Assure display is available.
-  echo -e "\\033[31mAborted, X (graphical) session unavailable.\\033[0m"; exit 2
-fi
-
-if ! hash xdpyinfo 2>/dev/null; then # Assure display probe.
-  echo -e "\\033[31mAborted, xdpyinfo is unavailable.\\033[0m"; exit 3
-fi
-
-if ! xdpyinfo &>/dev/null; then # Assure display info available.
-  echo -e "\\033[31mAborted, xterm test session failed.\\033[0m"; exit 4
-fi
-
 # ================ < Parameter Parser Check > ================ #
 getopt --test > /dev/null # Assure enhanced getopt (returns 4).
 if [ $? -ne 4 ]; then
@@ -119,7 +105,6 @@ while [ "$1" != "" ] && [ "$1" != "--" ]; do
     -5|--5ghz) FLUXIONEnable5GHZ=1;;
     -r|--reloader) readonly FLUXIONWIReloadDriver=1;;
     -n|--airmon-ng) readonly FLUXIONAirmonNG=1;;
-    -m|--multiplexer) readonly FLUXIONTMux=1;;
     -b|--bssid) FluxionTargetMAC=$2; shift;;
     -e|--essid) FluxionTargetSSID=$2;
       # TODO: Rearrange declarations to have routines available for use here.
